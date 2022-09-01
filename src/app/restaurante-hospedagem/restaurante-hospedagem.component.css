@@ -1,0 +1,9 @@
+#tutorial {
+  margin: auto;
+  float: right;
+  padding: 10px;
+}
+
+input[type="checkbox"]:indeterminate {
+  background: lightgreen;
+}

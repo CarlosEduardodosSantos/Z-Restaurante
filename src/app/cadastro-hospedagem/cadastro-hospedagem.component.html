@@ -1,0 +1,185 @@
+<nav
+  class="navbar navbar-light bg-primary"
+  style="border-bottom: 4px solid #0000; background-color: #efeeec !important"
+>
+  <div class="container-fluid">
+    <a href="#" class="navbar-brand">
+      <img
+        src="/assets/logo.png"
+        width="130"
+        height="160"
+        alt=""
+        class="d-inline-block align-middle mr-2"
+      />
+      <span class="text-uppercase font-weight-bold mx-4"
+        >Plano de Alimentação</span
+      >
+    </a>
+    <div class="d-flex">
+      <button
+        title="Restaurante"
+        class="btn btn-light mx-4"
+        (click)="gotoRestaurante()"
+      >
+        <i class="fa-solid fa-utensils"></i>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div
+  class="card"
+  style="margin: 0 auto; width: 500px; margin-top: 30px; margin-bottom: 30px"
+>
+  <div class="card-header">
+    <h4>Plano de Alimentação</h4>
+  </div>
+  <div class="card-body">
+    <form>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Hóspede</label>
+        <input
+          type="text"
+          class="form-control"
+          #nome
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+          placeholder="Ex: José Carlos Macoratti"
+        />
+      </div>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Hotel</label>
+        <input
+          type="text"
+          class="form-control"
+          #hotel
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+          placeholder="Ex: Golden Dolphin"
+        />
+      </div>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Nº Apto</label>
+        <input
+          type="number"
+          class="form-control"
+          #apto
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+          placeholder="Ex: 10"
+        />
+      </div>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Checkin</label>
+        <input
+          type="date"
+          class="form-control"
+          #checkin
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+          placeholder="Ex: 10"
+        />
+      </div>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Checkout</label>
+        <input
+          type="date"
+          class="form-control"
+          #checkout
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+          placeholder="Ex: 10"
+        />
+      </div>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Adultos</label>
+        <input
+          type="number"
+          class="form-control"
+          #a
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+          placeholder="Ex: 1"
+        />
+      </div>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Crianças</label>
+        <input
+          value="0"
+          type="number"
+          class="form-control"
+          #c
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+          placeholder="Ex: 2"
+        />
+      </div>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Não Pagantes</label>
+        <input
+          value="0"
+          type="number"
+          class="form-control"
+          #n
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+          placeholder="Ex: 3"
+        />
+      </div>
+      <br />
+      <div class="form-check">
+        <input
+          type="checkbox"
+          [(ngModel)]="isCheckedCafe"
+          [ngModelOptions]="{ standalone: true }"
+          (change)="checkCafe()"
+          value="1"
+          class="form-check-input"
+          id="exampleCheck1"
+        />
+        <label class="form-check-label" value="1" for="cafe">Café</label>
+      </div>
+      <div class="form-check">
+        <input
+          type="checkbox"
+          [(ngModel)]="isCheckedAlmoco"
+          [ngModelOptions]="{ standalone: true }"
+          (change)="checkAlmoco()"
+          class="form-check-input"
+          id="almoco"
+        />
+        <label class="form-check-label" value="1" #almoco for="almoco"
+          >Almoço</label
+        >
+      </div>
+      <div class="form-check">
+        <input
+          type="checkbox"
+          [(ngModel)]="isCheckedJanta"
+          [ngModelOptions]="{ standalone: true }"
+          (change)="checkJanta()"
+          class="form-check-input"
+          id="exampleCheck1"
+        />
+        <label class="form-check-label" value="1" #janta for="janta"
+          >Janta</label
+        >
+      </div>
+    </form>
+    <button
+      class="btn btn-warning"
+      (click)="inserirHosp(nome, apto, hotel, checkin, checkout, a, c, n)"
+      style="margin-top: 20px; margin-left: 175px"
+    >
+      Cadastrar
+    </button>
+  </div>
+</div>
+<div><br /></div>
+
+<footer class="bg-light text-center text-lg-start">
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+    © 2022 Powered by:
+    <a class="text-dark" href="https://www.zipsoftware.com.br/">ZiP Software</a>
+  </div>
+</footer>

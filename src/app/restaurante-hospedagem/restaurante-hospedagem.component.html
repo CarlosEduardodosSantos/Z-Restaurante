@@ -1,0 +1,364 @@
+<nav
+  class="navbar navbar-light bg-primary"
+  style="border-bottom: 4px solid #0000; background-color: #efeeec !important"
+>
+  <div class="container-fluid">
+    <a href="#" class="navbar-brand">
+      <img
+        src="/assets/logo.png"
+        width="90"
+        height="120"
+        alt=""
+        class="d-inline-block align-middle mr-2"
+      />
+      <span class="text-uppercase font-weight-bold mx-4">Restaurante</span>
+    </a>
+    <div class="d-flex">
+      <input
+        type="date"
+        style="width: 200px"
+        #dataAtual
+        class="form-control"
+        #data
+        id="exampleInputEmail1"
+        aria-describedby="emailHelp"
+        placeholder="Ex: 10"
+        value="{{ dataagora }}"
+      />
+      <input
+        type="text"
+        style="width: 200px"
+        placeholder="Pesquisar por nome"
+        class="form-control mx-2"
+        (keyup)="nome = $any($event.target).value"
+        name="search"
+      />
+      <button
+        title="Pesquisar"
+        (click)="getByName(dataAtual, nome)"
+        class="btn btn-warning mx-2"
+      >
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <div class="dropdown">
+        <button
+          title="Selecionar Refeição"
+          class="btn btn-light dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton1"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <i class="fa-solid fa-utensils"></i> {{ operacao }}
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          <li style="cursor: pointer">
+            <a class="dropdown-item" (click)="getByName(dataAtual, nome)"
+              >Todos</a
+            >
+          </li>
+          <li style="cursor: pointer">
+            <a class="dropdown-item" (click)="getByCafe(dataAtual)">Café</a>
+          </li>
+          <li style="cursor: pointer">
+            <a class="dropdown-item" (click)="getByAlmoco(dataAtual)">Almoço</a>
+          </li>
+          <li style="cursor: pointer">
+            <a class="dropdown-item" (click)="getByJanta(dataAtual)">Janta</a>
+          </li>
+        </ul>
+      </div>
+      <button
+        *ngIf="isAdmin != '1'"
+        title="Login"
+        class="btn btn-dark mx-2"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        <i class="fa-solid fa-circle-user"></i>
+      </button>
+      <button
+        title="Novo Plano Alimentação"
+        class="btn btn-dark mx-2"
+        *ngIf="isAdmin === '1'"
+        (click)="gotoCadastro()"
+      >
+        <i class="fa-solid fa-circle-plus"></i>
+      </button>
+
+      <button
+        (click)="goToRelatorio()"
+        title="Relatório"
+        class="btn btn-dark mx-2"
+        *ngIf="isAdmin === '1'"
+      >
+        <i class="fa-solid fa-receipt"></i>
+      </button>
+
+      <button title="Sair" class="btn btn-danger mx-2" (click)="logout()">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div id="tutorial" style="justify-content: right">
+  Tem:
+  <input
+    type="checkbox"
+    checked="true"
+    disabled="true"
+    value="1"
+    class="form-check-input"
+    id="exampleCheck1"
+  />
+  <br />
+  Ok:
+  <input
+    type="checkbox"
+    [indeterminate]="true"
+    disabled="true"
+    value="1"
+    class="form-check-input"
+    id="exampleCheck1"
+  />
+  <br />
+  Não:
+  <input
+    type="checkbox"
+    disabled="true"
+    value="1"
+    class="form-check-input"
+    id="exampleCheck1"
+  />
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col" style="display: none">Alimentação Id</th>
+      <th scope="col" style="display: none">Número</th>
+      <th scope="col">Hóspede</th>
+      <th scope="col">Apto</th>
+      <th scope="col">Data</th>
+      <th scope="col">Adultos</th>
+      <th scope="col">Crianças</th>
+      <th scope="col">Não Pagantes</th>
+      <th scope="col">Café</th>
+      <th scope="col">Almoço</th>
+      <th scope="col">Janta</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let ali of alimentacao.results; let i = index">
+      <td style="display: none" #Id>{{ ali.alimentacaoId }}</td>
+      <td style="display: none">{{ ali.nro }}</td>
+      <td>{{ ali.nome }}</td>
+      <td>{{ ali.apto }}</td>
+      <td>{{ converterLongDate(ali.data) }}</td>
+      <td>{{ ali.qtdeA }}</td>
+      <td>{{ ali.qtdeC }}</td>
+      <td>{{ ali.qtdeN }}</td>
+      <td>
+        <input
+          type="checkbox"
+          [disabled]="!ali.cafe"
+          [indeterminate]="ali.cConsumido"
+          [(ngModel)]="ali.cafe"
+          [ngModelOptions]="{ standalone: true }"
+          (change)="checkCafe(i)"
+          value="1"
+          class="form-check-input"
+          id="exampleCheck1"
+        />
+      </td>
+      <td>
+        <input
+          type="checkbox"
+          [disabled]="!ali.almoco"
+          [indeterminate]="ali.aConsumido"
+          [(ngModel)]="ali.almoco"
+          [ngModelOptions]="{ standalone: true }"
+          (change)="checkAlmoco(i)"
+          value="1"
+          class="form-check-input"
+          id="exampleCheck1"
+        />
+      </td>
+      <td>
+        <input
+          type="checkbox"
+          [disabled]="!ali.janta"
+          [indeterminate]="ali.jConsumido"
+          [(ngModel)]="ali.janta"
+          [ngModelOptions]="{ standalone: true }"
+          (change)="checkJanta(i)"
+          value="1"
+          class="form-check-input"
+          id="exampleCheck1"
+        />
+      </td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<div
+  class="modal fade"
+  id="gerarComprovante"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Atenção</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <h6 class="modal-text" id="exampleModalLabel">
+          Deseja confirmar a operação?
+        </h6>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Não
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#comprovante"
+        >
+          Sim
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="bg-light text-center text-lg-start">
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+    © 2022 Powered by:
+    <a class="text-dark" href="https://www.zipsoftware.com.br/">ZiP Software</a>
+  </div>
+</footer>
+
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Área de Gestão</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Login</label>
+            <input
+              type="text"
+              #login
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Senha</label>
+            <input
+              type="password"
+              #senha
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Fechar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          (click)="goToAdmin(login.value, senha.value)"
+        >
+          Entrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="exampleModal2"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Área de Gestão</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Login</label>
+            <input
+              type="text"
+              #login
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Senha</label>
+            <input
+              type="password"
+              #senha
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Fechar
+        </button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          Entrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
