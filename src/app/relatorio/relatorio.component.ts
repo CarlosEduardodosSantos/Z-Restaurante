@@ -48,14 +48,8 @@ export class RelatorioComponent implements OnInit {
   }
 
   converterLongDate(data: any) {
-    let dataco = new Date(data).getUTCDate();
-    let seconds = new Date(data).getSeconds();
-    let min = new Date(data).getMinutes();
-    let hora = new Date(data).getHours();
-    let dia = new Date(data).getDate();
-    let mes = new Date(data).getMonth() + 1;
-    let ano = new Date(data).getFullYear();
-    return dia + '/' + mes + '/' + ano;
+    let dataFormatada = new Date(data).toLocaleDateString()
+    return  dataFormatada;
   }
 
   printThisPage() {
